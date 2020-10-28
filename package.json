@@ -1,0 +1,70 @@
+{
+  "version": "0.1.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ilatovsky/russian-dayoffs"
+  },
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build",
+    "size": "size-limit",
+    "analyze": "size-limit --why"
+  },
+  "peerDependencies": {},
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "name": "russian-dayoffs",
+  "author": "Sasha Ilatovskiy",
+  "module": "dist/russian-dayoffs.esm.js",
+  "size-limit": [
+    {
+      "path": "dist/russian-dayoffs.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/russian-dayoffs.esm.js",
+      "limit": "10 KB"
+    }
+  ],
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^4.7.0",
+    "@types/glob": "^7.1.3",
+    "@types/node": "^14.14.0",
+    "@types/node-fetch": "^2.5.7",
+    "fast-xml-parser": "^3.17.4",
+    "glob": "^7.1.6",
+    "husky": "^4.3.0",
+    "node-fetch": "^2.6.1",
+    "size-limit": "^4.7.0",
+    "ts-node": "^9.0.0",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.0.3",
+    "typescript": "^4.0.5",
+    "xmlCalendar": "https://github.com/xmlcalendar/data.git"
+  },
+  "dependencies": {
+    "date-fns": "^2.16.1"
+  }
+}
