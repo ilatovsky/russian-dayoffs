@@ -6,8 +6,15 @@ import format from 'date-fns/format';
 
 export { Interval };
 
-const DEFAULT_WORKING_HOURS = [9, 18];
+const DEFAULT_WORKING_HOURS: [number, number] = [9, 18];
 const DEFAULT_WEEK_DAY_OFFS = [0, 6];
+
+function getWorkInterval(date: Date, workingHours: [number, number]): Interval {
+	return ({
+		start: new Date(date).setHours(workingHours[0], 0, 0, 0),
+		end: new Date(date).setHours(workingHours[1], 0, 0, 0),
+	})
+}
 
 export function getWorkingIntervals(interval: Interval, options?: Partial<{
 	weekDayOffs: number[],
@@ -31,34 +38,38 @@ export function getWorkingIntervals(interval: Interval, options?: Partial<{
 	); 
 
 	const workingIntervals: Interval[] = [];
-	
+
 	eachDayOfInterval(interval).forEach(
-		date => {
+		(date, index, array) => {
 			const dateString = format(date, 'y.L.d');
+			let workingInterval: Interval | undefined;
 			if (weekDayOffs.includes(date.getDay())) {
 				if (workDaysInInterval.includes(dateString)) {
-					workingIntervals.push({ 
-						start: date.setHours(workingHours[0], 0, 0, 0), 
-						end: date.setHours(workingHours[1], 0, 0, 0), 
-					});
+					workingInterval = getWorkInterval(date, workingHours);
 				}
 			} else {
 				if (options?.halfHolidayWorkingHours) {
 					if (halfHolidaysInInterval.includes(dateString)) {
-						workingIntervals.push({ 
-							start: date.setHours(options.halfHolidayWorkingHours[0], 0, 0, 0), 
-							end: date.setHours(options.halfHolidayWorkingHours[1], 0, 0, 0), 
-						});	
-						return;
+						workingInterval = getWorkInterval(date, options.halfHolidayWorkingHours);
 					}
 				}
-				if (!dayOffsInInterval.includes(dateString) || options?.excludeHolidays?.includes(DAY_OFFS[dateString] as string)) {
-					workingIntervals.push({ 
-						start: date.setHours(workingHours[0], 0, 0, 0), 
-						end: date.setHours(workingHours[1], 0, 0, 0), 
-					});
+				if ((!dayOffsInInterval.includes(dateString) || options?.excludeHolidays?.includes(DAY_OFFS[dateString] as string) && !workingInterval)) {
+					workingInterval = getWorkInterval(date, workingHours);
 				}
 			}
+			if (!workingInterval) {
+				return;
+			}
+			
+			if (index === 0 && interval.start > workingInterval.start) {
+				workingInterval.start = new Date(interval.start).getTime();
+			}
+
+			if (index === array.length - 1 && interval.end < workingInterval.end) {
+				workingInterval.end = new Date(interval.end).getTime();
+			}
+			
+			workingIntervals.push(workingInterval);
 		}
 	);
 	

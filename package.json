@@ -29,23 +29,17 @@
       "pre-commit": "tsdx lint"
     }
   },
-  "prettier": {
-    "printWidth": 80,
-    "semi": true,
-    "singleQuote": true,
-    "trailingComma": "es5"
-  },
   "name": "russian-dayoffs",
   "author": "Sasha Ilatovskiy",
   "module": "dist/russian-dayoffs.esm.js",
   "size-limit": [
     {
       "path": "dist/russian-dayoffs.cjs.production.min.js",
-      "limit": "10 KB"
+      "limit": "20 KB"
     },
     {
       "path": "dist/russian-dayoffs.esm.js",
-      "limit": "10 KB"
+      "limit": "20 KB"
     }
   ],
   "devDependencies": {
